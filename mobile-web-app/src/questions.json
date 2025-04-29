@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "question": "Hvilket land er kendt for deres øltraditioner?",
+        "choices": ["Frankrig", "Tyskland", "Spanien", "Italien"],
+        "correct": 1
+    },
+    {
+        "id": 2,
+        "question": "Hvad er hovedingrediensen i øl?",
+        "choices": ["Vand", "Sukker", "Salt", "Mel"],
+        "correct": 0
+    },
+    {
+        "id": 3,
+        "question": "Hvilken type øl er typisk mørk og fyldig?",
+        "choices": ["IPA", "Stout", "Pilsner", "Lager"],
+        "correct": 1
+    },
+    {
+        "id": 4,
+        "question": "Hvilket land opfandt pilsneren?",
+        "choices": ["Tjekkiet", "Belgien", "USA", "England"],
+        "correct": 0
+    },
+    {
+        "id": 5,
+        "question": "Hvad kaldes en øl med lav alkoholprocent?",
+        "choices": ["Letøl", "Mørkøl", "Hvedeøl", "Ale"],
+        "correct": 0
+    }
+]
