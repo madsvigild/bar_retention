@@ -139,51 +139,80 @@ document.addEventListener('DOMContentLoaded', async function () {
         session.questionsAnswered++;
         localStorage.setItem('session', JSON.stringify(session));
 
-        // Render question and choices
+        // Get game container to work with
+        const gameContainer = document.querySelector('.game-container');
+        
+        // Remove and recreate the buttons completely to ensure a clean state
+        const oldButtons = document.querySelectorAll('.answer-button');
+        oldButtons.forEach(button => button.remove());
+        
+        // Update question text
         const questionText = document.querySelector('#game-screen h2');
         questionText.textContent = question.question;
-        answerButtons.forEach((button, index) => {
-            // Reset button styling completely to default state
-            button.style.backgroundColor = '#2196F3'; // Reset to default blue
-            button.style.transform = 'none'; // Reset any transform/scale effect
-            button.classList.remove('clicked'); // Remove any clicked class if exists
-            button.blur(); // Remove focus state
-            
-            // Force DOM reflow to ensure animations reset
-            void button.offsetWidth;
-            
-            // Set new content and data
-            button.textContent = question.choices[index];
+        
+        // Create fresh buttons for each answer
+        question.choices.forEach((choice, index) => {
+            const button = document.createElement('button');
+            button.className = 'answer-button';
+            button.textContent = choice;
             button.dataset.correct = (index === question.correct).toString();
+            
+            // Add the click event listener to the new button
+            button.addEventListener('click', function() {
+                handleAnswerSelection(this);
+            });
+            
+            gameContainer.appendChild(button);
         });
 
         // Update progress bar
         quizProgress.value = session.questionsAnswered;
         quizProgress.max = questionCount;
     }
+    
+    // Separate function to handle answer selection
+    function handleAnswerSelection(button) {
+        // Disable all buttons to prevent multiple selections
+        const buttons = document.querySelectorAll('.answer-button');
+        buttons.forEach(btn => {
+            btn.disabled = true;
+            btn.style.pointerEvents = 'none';
+        });
+        
+        const isCorrect = button.dataset.correct === "true";
+        
+        // Show visual feedback for the selected button
+        if (isCorrect) {
+            button.classList.add('correct');
+            session.score++;
+        } else {
+            button.classList.add('incorrect');
+            
+            // Also show which one was the correct answer
+            buttons.forEach(btn => {
+                if (btn.dataset.correct === "true") {
+                    btn.classList.add('correct');
+                }
+            });
+        }
+        
+        localStorage.setItem('session', JSON.stringify(session));
+        
+        // Automatically proceed to next question after delay
+        setTimeout(() => {
+            if (session.questionsAnswered >= questionCount) {
+                endGame();
+            } else {
+                nextQuestion();
+            }
+        }, 1500); // 1.5 second delay to show the feedback
+    }
 
-    // Handle answer selection
+    // Initial setup of answer buttons - only needed for the first question that's in the HTML
     function setupAnswerButtons() {
         answerButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const isCorrect = this.dataset.correct === "true";
-                if (isCorrect) {
-                    session.score++;
-                    alert("Korrekt!");
-                } else {
-                    alert("Forkert!");
-                }
-                
-                localStorage.setItem('session', JSON.stringify(session));
-                
-                if (session.questionsAnswered >= questionCount) {
-                    endGame();
-                } else {
-                    // Small delay before next question
-                    setTimeout(() => {
-                        nextQuestion();
-                    }, 800);
-                }
+            button.addEventListener('click', function() {
+                handleAnswerSelection(this);
             });
         });
     }
@@ -212,6 +241,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Restore padding
         document.querySelector('.content-container').style.paddingTop = '160px';
         document.querySelector('.content-container').style.paddingBottom = '60px';
+        
+        // Update score display
+        const scoreValueElement = document.querySelector('#win-screen .score-value');
+        if (scoreValueElement) {
+            scoreValueElement.textContent = session.score;
+        }
         
         // Show win or lose screen based on score
         if (session.score >= 3) {

@@ -161,6 +161,29 @@ button:active {
     transform: scale(0.95);
 }
 
+/* Answer feedback styles */
+.answer-button.correct {
+    background-color: #4CAF50 !important; /* Bright green */
+    animation: pulse 0.5s;
+}
+
+.answer-button.incorrect {
+    background-color: #F44336 !important; /* Bright red */
+    animation: shake 0.5s;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
 /* Utility classes */
 .hidden {
     display: none !important;
@@ -182,6 +205,31 @@ button:active {
     color: #4CAF50; /* Green */
 }
 
+.prize-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.score-display {
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    padding: 8px 15px;
+    border-radius: 15px 15px 0 0;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: -10px;
+    position: relative;
+    z-index: 1;
+}
+
+.score-value {
+    font-size: 1.3em;
+    font-weight: 700;
+}
+
 .voucher {
     background-color: #FFC107; /* Yellow */
     color: #333333;
@@ -189,7 +237,7 @@ button:active {
     font-weight: 700;
     padding: 30px;
     border-radius: 15px;
-    margin: 20px 0;
+    width: 80%;
     display: inline-block;
     animation: fadeIn 1s ease-in-out;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
