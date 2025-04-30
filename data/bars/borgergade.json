@@ -1,11 +1,11 @@
 {
-  "name": "Bar Quiz Game",
+  "name": "Borgergade",
   "theme": {
-    "primaryColor": "#27ae60",
-    "secondaryColor": "#f39c12",
+    "primaryColor": "#2c3e50",
+    "secondaryColor": "#34495e",
     "fontFamily": "Poppins, sans-serif",
-    "headerBgColor": "#2ecc71",
-    "footerBgColor": "#2ecc71"
+    "headerBgColor": "#2c3e50",
+    "footerBgColor": "#2c3e50"
   },
   "game": {
     "quizFile": "quiz_default.json",
@@ -18,11 +18,11 @@
     }
   },
   "assets": {
-    "barLogo": "Pictures/Indsæt logo.png",
-    "defaultBarLogo": "Pictures/Indsæt logo.png"
+    "barLogo": "logo/Borgergade.png",
+    "defaultBarLogo": "logo/Borgergade.png"
   },
   "texts": {
-    "welcome": "Velkommen! Vind en gratis øl!",
+    "welcome": "Velkommen til Borgergade! Vind en gratis øl!",
     "subtitle": "Scan, spil og vind!",
     "winMessage": "Tillykke! Du har vundet!",
     "loseMessage": "Øv, prøv igen næste gang!"

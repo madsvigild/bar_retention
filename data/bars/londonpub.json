@@ -1,11 +1,11 @@
 {
-  "name": "Bar Quiz Game",
+  "name": "London Pub",
   "theme": {
-    "primaryColor": "#27ae60",
-    "secondaryColor": "#f39c12",
+    "primaryColor": "#c70039",
+    "secondaryColor": "#ff5733",
     "fontFamily": "Poppins, sans-serif",
-    "headerBgColor": "#2ecc71",
-    "footerBgColor": "#2ecc71"
+    "headerBgColor": "#c70039",
+    "footerBgColor": "#c70039"
   },
   "game": {
     "quizFile": "quiz_default.json",
@@ -18,11 +18,11 @@
     }
   },
   "assets": {
-    "barLogo": "Pictures/Indsæt logo.png",
-    "defaultBarLogo": "Pictures/Indsæt logo.png"
+    "barLogo": "logo/London Pub.png",
+    "defaultBarLogo": "logo/London Pub.png"
   },
   "texts": {
-    "welcome": "Velkommen! Vind en gratis øl!",
+    "welcome": "Velkommen til London Pub! Vind en gratis øl!",
     "subtitle": "Scan, spil og vind!",
     "winMessage": "Tillykke! Du har vundet!",
     "loseMessage": "Øv, prøv igen næste gang!"

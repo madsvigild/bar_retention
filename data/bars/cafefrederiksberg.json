@@ -1,11 +1,11 @@
 {
-  "name": "Bar Quiz Game",
+  "name": "Café Frederiksberg",
   "theme": {
-    "primaryColor": "#27ae60",
-    "secondaryColor": "#f39c12",
+    "primaryColor": "#3498db",
+    "secondaryColor": "#2980b9",
     "fontFamily": "Poppins, sans-serif",
-    "headerBgColor": "#2ecc71",
-    "footerBgColor": "#2ecc71"
+    "headerBgColor": "#3498db",
+    "footerBgColor": "#3498db"
   },
   "game": {
     "quizFile": "quiz_default.json",
@@ -18,11 +18,11 @@
     }
   },
   "assets": {
-    "barLogo": "Pictures/Indsæt logo.png",
-    "defaultBarLogo": "Pictures/Indsæt logo.png"
+    "barLogo": "logo/Cafe Frederiksberg.png",
+    "defaultBarLogo": "logo/Cafe Frederiksberg.png"
   },
   "texts": {
-    "welcome": "Velkommen! Vind en gratis øl!",
+    "welcome": "Velkommen til Café Frederiksberg! Vind en gratis øl!",
     "subtitle": "Scan, spil og vind!",
     "winMessage": "Tillykke! Du har vundet!",
     "loseMessage": "Øv, prøv igen næste gang!"

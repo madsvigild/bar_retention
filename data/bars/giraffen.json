@@ -1,11 +1,11 @@
 {
-  "name": "Bar Quiz Game",
+  "name": "Giraffen",
   "theme": {
-    "primaryColor": "#27ae60",
-    "secondaryColor": "#f39c12",
+    "primaryColor": "#ffa500",
+    "secondaryColor": "#ffbf40",
     "fontFamily": "Poppins, sans-serif",
-    "headerBgColor": "#2ecc71",
-    "footerBgColor": "#2ecc71"
+    "headerBgColor": "#ffa500",
+    "footerBgColor": "#ffa500"
   },
   "game": {
     "quizFile": "quiz_default.json",
@@ -18,11 +18,11 @@
     }
   },
   "assets": {
-    "barLogo": "Pictures/Indsæt logo.png",
-    "defaultBarLogo": "Pictures/Indsæt logo.png"
+    "barLogo": "logo/Giraffen.png",
+    "defaultBarLogo": "logo/Giraffen.png"
   },
   "texts": {
-    "welcome": "Velkommen! Vind en gratis øl!",
+    "welcome": "Velkommen til Giraffen! Vind en gratis øl!",
     "subtitle": "Scan, spil og vind!",
     "winMessage": "Tillykke! Du har vundet!",
     "loseMessage": "Øv, prøv igen næste gang!"

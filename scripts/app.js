@@ -216,9 +216,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         const question = questions[index];
         console.log("Showing question:", question);
 
-        // Update session
-        if (!session.usedQuestionIds.includes(question.id)) {
-            session.usedQuestionIds.push(question.id);
+        // Update session - Use index instead of question.id to avoid confusion
+        // since array indices start at 0 but question IDs might start at 1 or be non-sequential
+        if (!session.usedQuestionIndices) {
+            session.usedQuestionIndices = [];
+        }
+        
+        if (!session.usedQuestionIndices.includes(index)) {
+            session.usedQuestionIndices.push(index);
             session.questionsAnswered++;
             localStorage.setItem('session', JSON.stringify(session));
         }
@@ -302,6 +307,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             sessionId: generateUUID(),
             barId: barId,
             usedQuestionIds: [],
+            usedQuestionIndices: [],
             score: 0,
             scanCountToday: scanCountToday + 1,
             startTime: Date.now(),
@@ -415,7 +421,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (voucherElement) {
                 // Get prize based on score level
                 let prizeName = barConfig.game?.prizes?.[prizeLevel] || "øl";
-                voucherElement.textContent = `1 gratis ${prizeName}`;
+                voucherElement.textContent = `${prizeName}`;
             }
             
             winScreen.classList.remove('hidden');

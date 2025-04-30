@@ -12,9 +12,9 @@
     "winThreshold": 3,
     "cooldownMinutes": 60,
     "prizes": {
-      "gold": "IPA",
-      "silver": "pilsner",
-      "bronze": "sodavand"
+      "gold": "2 for 1 øl's pris",
+      "silver": "Halvvejs! Spil igen om en time og optjen en gratis øl!",
+      "bronze": "25% rabat på næste øl"
     }
   },
   "assets": {

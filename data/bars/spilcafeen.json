@@ -1,11 +1,11 @@
 {
-  "name": "Bar Quiz Game",
+  "name": "Spilcaféen",
   "theme": {
-    "primaryColor": "#27ae60",
-    "secondaryColor": "#f39c12",
+    "primaryColor": "#9b59b6",
+    "secondaryColor": "#8e44ad",
     "fontFamily": "Poppins, sans-serif",
-    "headerBgColor": "#2ecc71",
-    "footerBgColor": "#2ecc71"
+    "headerBgColor": "#9b59b6",
+    "footerBgColor": "#9b59b6"
   },
   "game": {
     "quizFile": "quiz_default.json",
@@ -18,11 +18,11 @@
     }
   },
   "assets": {
-    "barLogo": "Pictures/Indsæt logo.png",
-    "defaultBarLogo": "Pictures/Indsæt logo.png"
+    "barLogo": "logo/spilcaféen.png",
+    "defaultBarLogo": "logo/spilcaféen.png"
   },
   "texts": {
-    "welcome": "Velkommen! Vind en gratis øl!",
+    "welcome": "Velkommen til Spilcaféen! Vind en gratis øl!",
     "subtitle": "Scan, spil og vind!",
     "winMessage": "Tillykke! Du har vundet!",
     "loseMessage": "Øv, prøv igen næste gang!"

@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const voucherElement = document.getElementById('voucher-display');
                 if (voucherElement && session.prizeLevel) {
                     const prizeName = barConfig.game?.prizes?.[session.prizeLevel] || "øl";
-                    voucherElement.textContent = `1 gratis ${prizeName}`;
+                    voucherElement.textContent = `${prizeName}`;
                 }
             }
         } catch (e) {
