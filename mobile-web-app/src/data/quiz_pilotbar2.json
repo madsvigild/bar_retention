@@ -1,0 +1,32 @@
+[
+    {
+      "id": 1,
+      "question": "Hvad betyder det, når en bar har 'happy hour'?",
+      "choices": ["Længere åbningstid", "Billigere drinks", "Gratis snacks", "Live musik"],
+      "correct": 1
+    },
+    {
+      "id": 2,
+      "question": "Hvilket instrument bruges oftest af bartendere til at blande drinks?",
+      "choices": ["Ske", "Piskeris", "Shaker", "Kande"],
+      "correct": 2
+    },
+    {
+      "id": 3,
+      "question": "Hvilken slags bar har typisk øl, rustik stemning og dart?",
+      "choices": ["Cocktailbar", "Pub", "Vinbar", "Champagnebar"],
+      "correct": 1
+    },
+    {
+      "id": 4,
+      "question": "Hvilken drink består af vodka, tomatjuice og krydderier?",
+      "choices": ["Bloody Mary", "Tequila Sunrise", "White Russian", "Old Fashioned"],
+      "correct": 0
+    },
+    {
+      "id": 5,
+      "question": "Hvad kalder man den person, der arbejder bag baren?",
+      "choices": ["Servitør", "Bartender", "Sommelier", "Kok"],
+      "correct": 1
+    }
+]
