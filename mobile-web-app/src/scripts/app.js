@@ -13,14 +13,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     const bottomBar = document.querySelector('.bottom-bar');
     const barLogo = document.querySelector('.bar-logo');
 
+    // Get the bar ID from URL parameters (default to "default")
+    const urlParams = new URLSearchParams(window.location.search);
+    const barId = urlParams.get('bar') || 'default';
+    console.log(`Bar ID from URL: ${barId}`);
+
     let countdownInterval;
     let questions = [];
     let session = {};
-    let questionCount = 5; // Maximum questions per game
+    let currentIndex = 0;
 
     console.log("Starting app initialization...");
-
-    // Add this function at the top of your file, before any other functions
 
     // Generate UUID function compatible with all browsers
     function generateUUID() {
@@ -37,16 +40,174 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
-    // Fetch and cache questions
-    async function loadQuestions() {
+    // Fetch quiz data based on barId
+    async function loadQuizData() {
         try {
-            console.log("Loading questions...");
-            const response = await fetch('./questions.json'); // Add ./ prefix
+            console.log(`Loading quiz data for bar: ${barId}`);
+            let response = await fetch(`./data/quiz_${barId}.json`);
+            
+            // If specific bar quiz not found, fall back to default
+            if (!response.ok) {
+                console.log(`Quiz for ${barId} not found, loading default quiz`);
+                response = await fetch('./data/quiz_default.json');
+                
+                // If even default fails, try the original questions.json as last resort
+                if (!response.ok) {
+                    console.log('Default quiz not found, trying original questions.json');
+                    response = await fetch('./questions.json');
+                }
+            }
+            
+            if (!response.ok) {
+                throw new Error('Failed to load any quiz data');
+            }
+            
             questions = await response.json();
-            console.log("Questions loaded:", questions.length);
+            console.log("Quiz data loaded successfully:", questions.length);
+            
+            // Initialize quiz once data is loaded
+            initQuiz();
         } catch (error) {
-            console.error("Error loading questions:", error);
+            console.error("Error loading quiz data:", error);
+            alert("Der opstod en fejl under indlæsning af quizzen: " + error.message);
         }
+    }
+
+    // Initialize the quiz
+    function initQuiz() {
+        currentIndex = 0;
+        
+        // Initialize session with proper barId
+        initializeSession();
+        
+        // Set progress bar max based on questions count
+        if (quizProgress) {
+            quizProgress.max = questions.length;
+        }
+        
+        // Show the first question
+        showQuestion(currentIndex);
+        
+        // Wire up any initial buttons that might be in the HTML
+        setupAnswerButtons();
+    }
+
+    // Show question at specified index
+    function showQuestion(index) {
+        if (index >= questions.length) {
+            console.log("No more questions, ending game");
+            endGame();
+            return;
+        }
+
+        const question = questions[index];
+        console.log("Showing question:", question);
+
+        // Update session
+        if (!session.usedQuestionIds.includes(question.id)) {
+            session.usedQuestionIds.push(question.id);
+            session.questionsAnswered++;
+            localStorage.setItem('session', JSON.stringify(session));
+        }
+
+        // Get game container
+        const gameContainer = document.querySelector('.game-container');
+        
+        // Update question text
+        const questionText = document.querySelector('#game-screen h2');
+        questionText.textContent = question.question;
+        
+        // Remove existing buttons
+        const oldButtons = document.querySelectorAll('.answer-button');
+        oldButtons.forEach(button => button.remove());
+        
+        // Create fresh buttons for each answer
+        question.choices.forEach((choice, choiceIndex) => {
+            const button = document.createElement('button');
+            button.className = 'answer-button';
+            button.textContent = choice;
+            button.dataset.correct = (choiceIndex === question.correct).toString();
+            
+            // Add the click event listener
+            button.addEventListener('click', function() {
+                handleAnswerSelection(this);
+            });
+            
+            gameContainer.appendChild(button);
+        });
+
+        // Update progress bar
+        if (quizProgress) {
+            quizProgress.value = index + 1;
+        }
+    }
+    
+    // Handle answer selection
+    function handleAnswerSelection(button) {
+        // Disable all buttons to prevent multiple selections
+        const buttons = document.querySelectorAll('.answer-button');
+        buttons.forEach(btn => {
+            btn.disabled = true;
+            btn.style.pointerEvents = 'none';
+        });
+        
+        const isCorrect = button.dataset.correct === "true";
+        
+        // Show visual feedback for the selected button
+        if (isCorrect) {
+            button.classList.add('correct');
+            session.score++;
+        } else {
+            button.classList.add('incorrect');
+            
+            // Also show which one was the correct answer
+            buttons.forEach(btn => {
+                if (btn.dataset.correct === "true") {
+                    btn.classList.add('correct');
+                }
+            });
+        }
+        
+        localStorage.setItem('session', JSON.stringify(session));
+        
+        // Proceed to next question after a delay
+        setTimeout(() => {
+            currentIndex++;
+            if (currentIndex >= questions.length) {
+                endGame();
+            } else {
+                showQuestion(currentIndex);
+            }
+        }, 1500); // 1.5 second delay to show the feedback
+    }
+
+    // Initialize session
+    function initializeSession() {
+        const scanCountToday = parseInt(localStorage.getItem('scanCountToday') || '0');
+        
+        session = {
+            sessionId: generateUUID(),
+            barId: barId,
+            usedQuestionIds: [],
+            score: 0,
+            scanCountToday: scanCountToday + 1,
+            startTime: Date.now(),
+            questionsAnswered: 0
+        };
+        
+        localStorage.setItem('scanCountToday', session.scanCountToday.toString());
+        localStorage.setItem('session', JSON.stringify(session));
+        console.log("Session initialized:", session);
+    }
+
+    // Set up initial answer buttons if present in HTML
+    function setupAnswerButtons() {
+        const initialButtons = document.querySelectorAll('.answer-button');
+        initialButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                handleAnswerSelection(this);
+            });
+        });
     }
 
     // Function to show cooldown or normal start button
@@ -94,134 +255,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         }, 1000);
     }
 
-    // Initialize session
-    function initializeSession() {
-        const scanCountToday = parseInt(localStorage.getItem('scanCountToday') || '0');
-        
-        session = {
-            sessionId: generateUUID(), // Change here
-            barId: "12345",
-            usedQuestionIds: [],
-            score: 0,
-            scanCountToday: scanCountToday + 1,
-            startTime: Date.now(),
-            questionsAnswered: 0
-        };
-        
-        localStorage.setItem('scanCountToday', session.scanCountToday.toString());
-        localStorage.setItem('session', JSON.stringify(session));
-        console.log("Session initialized:", session);
-    }
-    // Render the next question
-    function nextQuestion() {
-        console.log("Loading next question...");
-        
-        // Check if we've reached the maximum questions
-        if (session.questionsAnswered >= questionCount) {
-            console.log("Max questions reached, ending game");
-            endGame();
-            return;
-        }
-        
-        const availableQuestions = questions.filter(q => !session.usedQuestionIds.includes(q.id));
-        if (availableQuestions.length === 0) {
-            console.log("No more available questions, ending game");
-            endGame();
-            return;
-        }
-
-        const randomIndex = Math.floor(Math.random() * availableQuestions.length);
-        const question = availableQuestions[randomIndex];
-        console.log("Selected question:", question);
-
-        // Update session
-        session.usedQuestionIds.push(question.id);
-        session.questionsAnswered++;
-        localStorage.setItem('session', JSON.stringify(session));
-
-        // Get game container to work with
-        const gameContainer = document.querySelector('.game-container');
-        
-        // Remove and recreate the buttons completely to ensure a clean state
-        const oldButtons = document.querySelectorAll('.answer-button');
-        oldButtons.forEach(button => button.remove());
-        
-        // Update question text
-        const questionText = document.querySelector('#game-screen h2');
-        questionText.textContent = question.question;
-        
-        // Create fresh buttons for each answer
-        question.choices.forEach((choice, index) => {
-            const button = document.createElement('button');
-            button.className = 'answer-button';
-            button.textContent = choice;
-            button.dataset.correct = (index === question.correct).toString();
-            
-            // Add the click event listener to the new button
-            button.addEventListener('click', function() {
-                handleAnswerSelection(this);
-            });
-            
-            gameContainer.appendChild(button);
-        });
-
-        // Update progress bar
-        quizProgress.value = session.questionsAnswered;
-        quizProgress.max = questionCount;
-    }
-    
-    // Separate function to handle answer selection
-    function handleAnswerSelection(button) {
-        // Disable all buttons to prevent multiple selections
-        const buttons = document.querySelectorAll('.answer-button');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-            btn.style.pointerEvents = 'none';
-        });
-        
-        const isCorrect = button.dataset.correct === "true";
-        
-        // Show visual feedback for the selected button
-        if (isCorrect) {
-            button.classList.add('correct');
-            session.score++;
-        } else {
-            button.classList.add('incorrect');
-            
-            // Also show which one was the correct answer
-            buttons.forEach(btn => {
-                if (btn.dataset.correct === "true") {
-                    btn.classList.add('correct');
-                }
-            });
-        }
-        
-        localStorage.setItem('session', JSON.stringify(session));
-        
-        // Automatically proceed to next question after delay
-        setTimeout(() => {
-            if (session.questionsAnswered >= questionCount) {
-                endGame();
-            } else {
-                nextQuestion();
-            }
-        }, 1500); // 1.5 second delay to show the feedback
-    }
-
-    // Initial setup of answer buttons - only needed for the first question that's in the HTML
-    function setupAnswerButtons() {
-        answerButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                handleAnswerSelection(this);
-            });
-        });
-    }
-
     // End the game
     function endGame() {
         console.log("Ending game with score:", session.score);
         const prizeLevel = calculatePrizeLevel();
-        const voucherCode = generateUUID(); // Change here
+        const voucherCode = generateUUID();
         
         // Store voucher in session
         session.voucherCode = voucherCode;
@@ -272,8 +310,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Calculate prize level
     function calculatePrizeLevel() {
-        if (session.score >= 5) return "guld";
-        if (session.score >= 3) return "sølv";
+        if (session.score >= questions.length) return "guld";
+        if (session.score >= Math.ceil(questions.length / 2)) return "sølv";
         return "bronze";
     }
 
@@ -287,31 +325,29 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 
     // Navigate to Game Screen
-    startButton.addEventListener('click', async function () {
-    console.log("Start button clicked on mobile!");
-    try {
-        initializeSession();
-        welcomeScreen.classList.add('hidden');
-        
-        // Hide logos and bars during gameplay for better focus
-        barLogo.classList.add('hidden');
-        gameLogo.classList.add('hidden');
-        topBar.classList.add('hidden');
-        bottomBar.classList.add('hidden');
-        
-        // Remove top and bottom padding from content container
-        document.querySelector('.content-container').style.paddingTop = '10px';
-        document.querySelector('.content-container').style.paddingBottom = '10px';
-        
-        gameScreen.classList.remove('hidden');
-        gameScreen.classList.add('active');
-        await nextQuestion(); // Add await here
-        console.log("Game screen should be visible now");
-    } catch (error) {
-        console.error("Error in start button handler:", error);
-        alert("Der opstod en fejl: " + error.message); // Show error in alert for mobile debugging
-    }
-});
+    startButton.addEventListener('click', function () {
+        console.log("Start button clicked!");
+        try {
+            welcomeScreen.classList.add('hidden');
+            
+            // Hide logos and bars during gameplay for better focus
+            barLogo.classList.add('hidden');
+            gameLogo.classList.add('hidden');
+            topBar.classList.add('hidden');
+            bottomBar.classList.add('hidden');
+            
+            // Remove top and bottom padding from content container
+            document.querySelector('.content-container').style.paddingTop = '10px';
+            document.querySelector('.content-container').style.paddingBottom = '10px';
+            
+            gameScreen.classList.remove('hidden');
+            gameScreen.classList.add('active');
+            console.log("Game screen should be visible now");
+        } catch (error) {
+            console.error("Error in start button handler:", error);
+            alert("Der opstod en fejl: " + error.message);
+        }
+    });
 
     // Retry button logic
     retryButton.addEventListener('click', function () {
@@ -332,10 +368,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         showCooldown();
     });
 
-    // Setup functions
-    setupAnswerButtons();
-    
-    // Load questions and initialize cooldown state on page load
-    await loadQuestions();
+    // Initialize app by loading quiz data and showing cooldown
+    await loadQuizData();
     showCooldown();
 });
