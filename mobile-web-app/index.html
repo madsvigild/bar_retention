@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velkommen</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Fixed header area for bar logo -->
+    <div class="top-bar"></div>
+    
+    <!-- Bar Logo -->
+    <img src="Pictures/Indsæt logo.png" alt="Bar Logo" class="bar-logo">
+
+    <!-- Main Content -->
+    <div class="content-container">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen">
+            <div class="welcome-container">
+                <h1>Velkommen! Vind en gratis øl!</h1>
+                <p class="subheading">Scan, spil og vind!</p>
+                <button id="start-button">Start spillet</button>
+                <button id="cooldown-button" class="hidden" disabled>Spil igen om 60:00</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen hidden">
+            <div class="game-container">
+                <progress id="quiz-progress" max="5" value="0"></progress>
+                <h2>Hvilket land er kendt for deres øltraditioner?</h2>
+                <button class="answer-button" data-correct="false">Frankrig</button>
+                <button class="answer-button" data-correct="true">Tyskland</button>
+                <button class="answer-button" data-correct="false">Spanien</button>
+                <button class="answer-button" data-correct="false">Italien</button>
+            </div>
+        </div>
+
+        <!-- Win Screen -->
+        <div id="win-screen" class="screen hidden">
+            <div class="win-container">
+                <h2>Tillykke! Du har vundet!</h2>
+                <div class="prize-container">
+                    <div class="score-display">Din score: <span class="score-value">0</span>/5</div>
+                    <div class="voucher">1 gratis øl</div>
+                </div>
+                <button id="redeem-button" onclick="window.location.href='redeem.html'">Få din præmie</button>
+            </div>
+        </div>
+
+        <!-- Lose Screen -->
+        <div id="lose-screen" class="screen hidden">
+            <div class="lose-container">
+                <h2>Øv, prøv igen næste gang!</h2>
+                <button id="retry-button">Prøv igen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fixed footer area for game logo -->
+    <div class="bottom-bar"></div>
+    
+    <!-- Game Logo -->
+    <img src="Pictures/game-logo.png" alt="Game Logo" class="game-logo">
+
+    <script src="scripts/app.js"></script>
+</body>
+</html>
