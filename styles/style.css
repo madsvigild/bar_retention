@@ -1,7 +1,14 @@
+/* Theme variables */
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --font-family: 'Poppins', Arial, sans-serif;
+}
+
 /* Base styles */
 body {
     background-color: #ffffff;
-    font-family: 'Poppins', Arial, sans-serif;
+    font-family: var(--font-family);
     margin: 0;
     padding: 0;
     text-align: center;
@@ -17,7 +24,7 @@ body {
     position: fixed;
     left: 0;
     right: 0;
-    background-color: #ffffff;
+    background-color: var(--primary-color);
     z-index: 99;
 }
 
@@ -118,7 +125,7 @@ h2 {
 
 /* Buttons */
 button {
-    background-color: #4CAF50; /* Green */
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 15px 32px;
@@ -130,7 +137,7 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: color-mix(in srgb, var(--primary-color) 90%, black);
     transform: scale(1.05);
 }
 
@@ -139,7 +146,7 @@ button:active {
 }
 
 .answer-button {
-    background-color: #2196F3; /* Blue */
+    background-color: var(--secondary-color);
     color: white;
     border: none;
     padding: 15px 20px;
@@ -153,7 +160,7 @@ button:active {
 }
 
 .answer-button:hover {
-    background-color: #1976D2;
+    background-color: color-mix(in srgb, var(--secondary-color) 90%, black);
     transform: scale(1.05);
 }
 
@@ -202,7 +209,7 @@ button:active {
 .win-container h2 {
     font-size: 2em;
     font-weight: 600;
-    color: #4CAF50; /* Green */
+    color: var(--primary-color);
 }
 
 .prize-container {
@@ -214,7 +221,7 @@ button:active {
 }
 
 .score-display {
-    background-color: #4CAF50; /* Green background */
+    background-color: var(--primary-color);
     color: white;
     padding: 8px 15px;
     border-radius: 15px 15px 0 0;
@@ -244,7 +251,7 @@ button:active {
 }
 
 #redeem-button {
-    background-color: #4CAF50; /* Green */
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 15px 32px;
@@ -256,7 +263,7 @@ button:active {
 }
 
 #redeem-button:hover {
-    background-color: #45a049;
+    background-color: color-mix(in srgb, var(--primary-color) 90%, black);
     transform: scale(1.05);
 }
 
@@ -273,7 +280,7 @@ button:active {
 }
 
 #retry-button {
-    background-color: #2196F3; /* Blue */
+    background-color: var(--secondary-color);
     color: white;
     border: none;
     padding: 15px 32px;
@@ -285,7 +292,7 @@ button:active {
 }
 
 #retry-button:hover {
-    background-color: #1976D2;
+    background-color: color-mix(in srgb, var(--secondary-color) 90%, black);
     transform: scale(1.05);
 }
 
@@ -316,12 +323,12 @@ button:active {
 }
 
 .redeem-form input:focus {
-    border-color: #4CAF50; /* Green border on focus */
+    border-color: var(--primary-color);
     outline: none;
 }
 
 .redeem-form button {
-    background-color: #4CAF50; /* Green */
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 15px 32px;
@@ -333,7 +340,7 @@ button:active {
 }
 
 .redeem-form button:hover {
-    background-color: #45a049;
+    background-color: color-mix(in srgb, var(--primary-color) 90%, black);
     transform: scale(1.05);
 }
 
@@ -370,12 +377,12 @@ button:active {
 }
 
 #quiz-progress::-webkit-progress-value {
-    background-color: #4CAF50;
+    background-color: var(--primary-color);
     border-radius: 10px;
 }
 
 #quiz-progress::-moz-progress-bar {
-    background-color: #4CAF50;
+    background-color: var(--primary-color);
     border-radius: 10px;
 }
 

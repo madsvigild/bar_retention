@@ -1,0 +1,30 @@
+{
+  "name": "Bar Quiz Game",
+  "theme": {
+    "primaryColor": "#27ae60",
+    "secondaryColor": "#f39c12",
+    "fontFamily": "Poppins, sans-serif",
+    "headerBgColor": "#2ecc71",
+    "footerBgColor": "#2ecc71"
+  },
+  "game": {
+    "quizFile": "quiz_default.json",
+    "winThreshold": 3,
+    "cooldownMinutes": 60,
+    "prizes": {
+      "gold": "special øl",
+      "silver": "alm. øl",
+      "bronze": "øl"
+    }
+  },
+  "assets": {
+    "barLogo": "Pictures/Indsæt logo.png",
+    "defaultBarLogo": "Pictures/Indsæt logo.png"
+  },
+  "texts": {
+    "welcome": "Velkommen! Vind en gratis øl!",
+    "subtitle": "Scan, spil og vind!",
+    "winMessage": "Tillykke! Du har vundet!",
+    "loseMessage": "Øv, prøv igen næste gang!"
+  }
+}

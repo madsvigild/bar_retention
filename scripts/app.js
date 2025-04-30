@@ -15,9 +15,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Get the bar ID from URL parameters (default to "default")
     const urlParams = new URLSearchParams(window.location.search);
-    const barId = urlParams.get('bar') || 'default';
+    const barId = urlParams.get('barId') || 'default';
     console.log(`Bar ID from URL: ${barId}`);
-
+    
+    let barConfig = {};
     let countdownInterval;
     let questions = [];
     let session = {};
@@ -39,16 +40,128 @@ document.addEventListener('DOMContentLoaded', async function () {
             return v.toString(16);
         });
     }
+    
+    // Load bar configuration
+    async function loadBarConfig() {
+        try {
+            console.log(`Loading configuration for bar: ${barId}`);
+            let response = await fetch(`./data/bars/${barId}.json`);
+            
+            // If specific bar config not found, fall back to default
+            if (!response.ok) {
+                console.log(`Configuration for ${barId} not found, loading default configuration`);
+                response = await fetch('./data/bars/default.json');
+            }
+            
+            if (!response.ok) {
+                throw new Error('Failed to load any bar configuration');
+            }
+            
+            barConfig = await response.json();
+            console.log("Bar configuration loaded successfully:", barConfig);
+            
+            // Apply configuration to UI
+            applyBarConfig();
+            
+            // Now load the quiz data for this bar
+            await loadQuizData();
+        } catch (error) {
+            console.error("Error loading bar configuration:", error);
+            alert("Der opstod en fejl under indlæsning af konfigurationen: " + error.message);
+            
+            // Set default configuration
+            barConfig = {
+                name: "Bar Quiz Game",
+                theme: {
+                    primaryColor: "#27ae60",
+                    secondaryColor: "#f39c12",
+                    fontFamily: "Poppins, sans-serif",
+                    headerBgColor: "#2ecc71",
+                    footerBgColor: "#2ecc71"
+                },
+                game: {
+                    quizFile: "quiz_default.json",
+                    winThreshold: 3,
+                    cooldownMinutes: 60,
+                    prizes: {
+                        gold: "special øl",
+                        silver: "alm. øl",
+                        bronze: "øl"
+                    }
+                },
+                assets: {
+                    barLogo: "Pictures/Indsæt logo.png"
+                },
+                texts: {
+                    welcome: "Velkommen! Vind en gratis øl!",
+                    subtitle: "Scan, spil og vind!",
+                    winMessage: "Tillykke! Du har vundet!",
+                    loseMessage: "Øv, prøv igen næste gang!"
+                }
+            };
+            applyBarConfig();
+            
+            // Try to load quiz data anyway
+            await loadQuizData();
+        }
+    }
+    
+    // Apply bar configuration to UI
+    function applyBarConfig() {
+        // Set document title
+        document.title = barConfig.name;
+        
+        // Apply theme colors
+        const root = document.documentElement;
+        if (barConfig.theme) {
+            root.style.setProperty('--primary-color', barConfig.theme.primaryColor || '#27ae60');
+            root.style.setProperty('--secondary-color', barConfig.theme.secondaryColor || '#f39c12');
+            
+            // Set header and footer colors
+            if (topBar) topBar.style.backgroundColor = barConfig.theme.headerBgColor || '#2ecc71';
+            if (bottomBar) bottomBar.style.backgroundColor = barConfig.theme.footerBgColor || '#2ecc71';
+            
+            // Set font family if provided
+            if (barConfig.theme.fontFamily) {
+                root.style.setProperty('--font-family', barConfig.theme.fontFamily);
+            }
+        }
+        
+        // Set bar logo
+        if (barLogo && barConfig.assets) {
+            barLogo.src = barConfig.assets.barLogo || barConfig.assets.defaultBarLogo || "Pictures/Indsæt logo.png";
+            barLogo.alt = barConfig.name;
+        }
+        
+        // Set texts
+        if (barConfig.texts) {
+            // Welcome screen texts
+            const welcomeTitle = document.querySelector('#welcome-screen h1');
+            if (welcomeTitle) welcomeTitle.textContent = barConfig.texts.welcome || "Velkommen! Vind en gratis øl!";
+            
+            const welcomeSubtitle = document.querySelector('#welcome-screen .subheading');
+            if (welcomeSubtitle) welcomeSubtitle.textContent = barConfig.texts.subtitle || "Scan, spil og vind!";
+            
+            // Win/lose screen texts
+            const winTitle = document.querySelector('#win-screen h2');
+            if (winTitle) winTitle.textContent = barConfig.texts.winMessage || "Tillykke! Du har vundet!";
+            
+            const loseTitle = document.querySelector('#lose-screen h2');
+            if (loseTitle) loseTitle.textContent = barConfig.texts.loseMessage || "Øv, prøv igen næste gang!";
+        }
+    }
 
-    // Fetch quiz data based on barId
+    // Fetch quiz data based on bar configuration
     async function loadQuizData() {
         try {
-            console.log(`Loading quiz data for bar: ${barId}`);
-            let response = await fetch(`./data/quiz_${barId}.json`);
+            const quizFile = barConfig.game?.quizFile || `quiz_${barId}.json`;
+            console.log(`Loading quiz data from: ${quizFile}`);
+            
+            let response = await fetch(`./data/${quizFile}`);
             
             // If specific bar quiz not found, fall back to default
             if (!response.ok) {
-                console.log(`Quiz for ${barId} not found, loading default quiz`);
+                console.log(`Quiz ${quizFile} not found, loading default quiz`);
                 response = await fetch('./data/quiz_default.json');
                 
                 // If even default fails, try the original questions.json as last resort
@@ -219,13 +332,17 @@ document.addEventListener('DOMContentLoaded', async function () {
             cooldownButton.classList.add('hidden');
             return;
         }
+        
+        // Get cooldown period from bar config or use default
+        const cooldownMinutes = barConfig.game?.cooldownMinutes || 60;
+        const cooldownMs = cooldownMinutes * 60 * 1000;
 
-        const remaining = 3600000 - (Date.now() - parseInt(lastPlay, 10));
+        const remaining = cooldownMs - (Date.now() - parseInt(lastPlay, 10));
         if (remaining > 0) {
             // Show cooldown button
             startButton.classList.add('hidden');
             cooldownButton.classList.remove('hidden');
-            updateCooldown(remaining);
+            updateCooldown(remaining, cooldownMinutes);
         } else {
             // Show normal start button
             startButton.classList.remove('hidden');
@@ -234,7 +351,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     // Function to update cooldown timer
-    function updateCooldown(remaining) {
+    function updateCooldown(remaining, cooldownMinutes) {
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
         cooldownButton.textContent = `Spil igen om ${minutes}:${seconds.toString().padStart(2, '0')}`;
@@ -245,7 +362,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 clearInterval(countdownInterval);
                 cooldownButton.classList.add('hidden');
                 startButton.classList.remove('hidden');
-                cooldownButton.textContent = "Spil igen om 60:00"; // Reset text
+                cooldownButton.textContent = `Spil igen om ${cooldownMinutes}:00`; // Reset text with config cooldown
             } else {
                 const newMinutes = Math.floor(newRemaining / 60000);
                 const newSeconds = Math.floor((newRemaining % 60000) / 1000);
@@ -286,14 +403,19 @@ document.addEventListener('DOMContentLoaded', async function () {
             scoreValueElement.textContent = session.score;
         }
         
-        // Show win or lose screen based on score
-        if (session.score >= 3) {
+        // Get win threshold from bar config or use default
+        const winThreshold = barConfig.game?.winThreshold || 3;
+        
+        // Show win or lose screen based on score and configured threshold
+        if (session.score >= winThreshold) {
             console.log("Win condition met!");
             
-            // Update win screen with prize info
+            // Update win screen with prize info based on bar config
             const voucherElement = document.querySelector('#win-screen .voucher');
             if (voucherElement) {
-                voucherElement.textContent = `1 gratis ${prizeLevel} øl`;
+                // Get prize based on score level
+                let prizeName = barConfig.game?.prizes?.[prizeLevel] || "øl";
+                voucherElement.textContent = `1 gratis ${prizeName}`;
             }
             
             winScreen.classList.remove('hidden');
@@ -308,10 +430,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         localStorage.setItem('lastPlay', Date.now());
     }
 
-    // Calculate prize level
+    // Calculate prize level based on score percentage
     function calculatePrizeLevel() {
-        if (session.score >= questions.length) return "guld";
-        if (session.score >= Math.ceil(questions.length / 2)) return "sølv";
+        const scorePercentage = (session.score / questions.length) * 100;
+        
+        if (scorePercentage >= 100) return "gold";
+        if (scorePercentage >= 60) return "silver";
         return "bronze";
     }
 
@@ -368,7 +492,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         showCooldown();
     });
 
-    // Initialize app by loading quiz data and showing cooldown
-    await loadQuizData();
+    // Initialize app by loading bar config
+    await loadBarConfig();
     showCooldown();
 });

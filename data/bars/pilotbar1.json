@@ -1,0 +1,30 @@
+{
+  "name": "Pilot Bar 1",
+  "theme": {
+    "primaryColor": "#2c3e50",
+    "secondaryColor": "#e67e22",
+    "fontFamily": "Poppins, sans-serif",
+    "headerBgColor": "#34495e",
+    "footerBgColor": "#34495e"
+  },
+  "game": {
+    "quizFile": "quiz_pilotbar1.json",
+    "winThreshold": 3,
+    "cooldownMinutes": 60,
+    "prizes": {
+      "gold": "IPA",
+      "silver": "pilsner",
+      "bronze": "sodavand"
+    }
+  },
+  "assets": {
+    "barLogo": "Pictures/bar-logos/pilotbar1-logo.png",
+    "defaultBarLogo": "Pictures/Indsæt logo.png"
+  },
+  "texts": {
+    "welcome": "Velkommen til Pilot Bar 1! Vind en gratis øl!",
+    "subtitle": "Scan, svar og vind fede præmier!",
+    "winMessage": "Tillykke! Du har vundet!",
+    "loseMessage": "Øv, prøv igen næste gang!"
+  }
+}

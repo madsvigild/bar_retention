@@ -1,0 +1,30 @@
+{
+  "name": "Pilot Bar 2",
+  "theme": {
+    "primaryColor": "#8e44ad",
+    "secondaryColor": "#3498db",
+    "fontFamily": "Poppins, sans-serif",
+    "headerBgColor": "#9b59b6",
+    "footerBgColor": "#9b59b6"
+  },
+  "game": {
+    "quizFile": "quiz_pilotbar2.json",
+    "winThreshold": 4,
+    "cooldownMinutes": 120,
+    "prizes": {
+      "gold": "cocktail",
+      "silver": "øl",
+      "bronze": "shot"
+    }
+  },
+  "assets": {
+    "barLogo": "Pictures/bar-logos/pilotbar2-logo.png",
+    "defaultBarLogo": "Pictures/Indsæt logo.png"
+  },
+  "texts": {
+    "welcome": "Velkommen til Pilot Bar 2! Test din viden!",
+    "subtitle": "Svar rigtigt og få en gratis drink!",
+    "winMessage": "Hurra! Du klarede den!",
+    "loseMessage": "Desværre, bedre held næste gang!"
+  }
+}
