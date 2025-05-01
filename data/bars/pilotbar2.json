@@ -12,9 +12,9 @@
     "winThreshold": 4,
     "cooldownMinutes": 120,
     "prizes": {
-      "gold": "2 for 1 øl's pris",
-      "silver": "Halvvejs! Spil igen om en time og optjen en gratis øl!",
-      "bronze": "25% rabat på næste øl"
+      "gold": "*Præmie/rabat*",
+      "silver": "*Lidt mindre præmie/rabat*",
+      "bronze": "*lille præmie/rabat*"
     }
   },
   "assets": {
